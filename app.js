@@ -85,6 +85,14 @@ app.get('/fundraiser/:id',(req, res) => {
     });
 });
 
+//Static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+//Homepage
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 //server
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
