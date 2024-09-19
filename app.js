@@ -1,26 +1,26 @@
-const express = require('express');
-const mysql = require('mysql2');
-const app = express();
-const port = 4000;
-const path = require('path');
+const express=require('express');
+const mysql=require('mysql2');
+const app=express();
+const port=4000;
+const path=require('path');
 
-const connection = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: '2002812918',
-	database: 'crowdfunding_db'
+const connection=mysql.createConnection({
+	host:"localhost",
+	user:"root",
+	password:"2002812918",
+	database:"crowdfunding_db"
 });
 
-connection.connect(err =>{
-	if (err) {
-		console.error('Error connecting to the database:' + err.stack);
+connection.connect(err=>{
+	if(err){
+		console.error('Error connecting to the database:'+err.stack);
 		return;
 	}
 	console.log('Connected to the database');
 });
 
 //get all fundraisers(所有信息)
-app.get('/fundraisers', (req, res) => {
+app.get('/fundraisers',(req, res)=>{
 	const query = `
 	SELECT FUNDRAISER.*, CATEGORY.NAME AS CATEGORY_NAME
     FROM FUNDRAISER
@@ -89,11 +89,16 @@ app.get('/fundraiser/:id',(req, res) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Homepage
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('/',(req,res)=>{
+  res.sendFile(path.join(__dirname,"index.html"));
+});
+
+//search
+app.get('/search',(req,res)=>{
+  res.sendFile(path.join(__dirname,"search.html"));
 });
 
 //server
-app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
+app.listen(4000,()=>{
+	console.log("Server is running in 4000");
 });
