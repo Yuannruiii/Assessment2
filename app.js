@@ -19,86 +19,99 @@ connection.connect(err=>{
 	console.log('Connected to the database');
 });
 
-//get all fundraisers(所有信息)
-app.get('/fundraisers',(req, res)=>{
-	const query = `
-	SELECT FUNDRAISER.*, CATEGORY.NAME AS CATEGORY_NAME
+app.get('/fundraisers',(req,res)=>{
+  const query=`
+    SELECT FUNDRAISER.*,CATEGORY.NAME AS CATEGORY_NAME
     FROM FUNDRAISER
-    JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID = CATEGORY.CATEGORY_ID
-    WHERE FUNDRAISER.ACTIVE = true
-	`;
+    JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID=CATEGORY.CATEGORY_ID
+    WHERE FUNDRAISER.ACTIVE=true
+  `;
 
-	connection.query(query, (error, results) => {
-		if (error) {
-			res.status(500).send('Database query failed');
-		} else {
-			res.json(results);
-		}
-	});
+  connection.query(query,(error,results)=>{
+    if (error){
+      console.error('Database query failed:',error);
+      return res.status(500).json({error:'Database query failed',details:error});
+    }
+
+    if (results.length===0){
+      return res.status(404).json({message:'No active fundraisers found'});
+    }
+
+    res.json(results);
+  });
 });
 
-//get categories(获取人物)
-app.get('/categories', (req, res) => {
-	const category = req.query.category;
-	const city = req.query.city;
+app.get('/categories',(req,res)=>{
+	const category=req.query.category;
+	const city=req.query.city;
 
-	let query = `
+	let query=`
 	SELECT FUNDRAISER.*, CATEGORY.NAME AS CATEGORY_NAME 
     FROM FUNDRAISER 
     JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID = CATEGORY.CATEGORY_ID 
     WHERE FUNDRAISER.ACTIVE = true
     `;
 
-    if (category) {
-    	query += `AND CATEGORY.NAME = '${category}'`;
+    if(category){
+    	query+=`AND CATEGORY.NAME='${category}'`;
     }
 
-    if (city) {
-    	query += `AND FUNDRAISER.CITY = '${city}'`;
+    if(city){
+    	query+=`AND FUNDRAISER.CITY='${city}'`;
     }
 
-    connection.query(query, (error, results) => {
-    	if (error) {
+    connection.query(query,(error,results)=>{
+    	if(error){
     		res.status(500).send('Database query failed');
-    	} else {
+    	}else{
     		res.json(results);
     	}
     });
 });
 
-//GET fundraiser by ID（查询）
-app.get('/fundraiser/:id',(req, res) => {
-	const fundraiserID = req.params.id;
-	const query = `
-	SELECT FUNDRAISER.*, CATEGORY.NAME AS CATEGORY_NAME 
-    FROM FUNDRAISER 
-    JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID = CATEGORY.CATEGORY_ID 
-    WHERE FUNDRAISER.FUNDRAISER_ID = ?
-    `;
+app.get('/fundraiser/:id',(req,res)=>{
+  const fundraiserID=req.params.id;
 
-    connection.query(query, [fundraiserID], (error, results) => {
-    	if (error) {
-    		res.status(500).send('Database query failed');
-    	} else {
-    		res.json(results[0]);
-    	}
-    });
+  console.log(`Fetching fundraiser with ID:${fundraiserID}`);
+
+  const query=`
+  SELECT FUNDRAISER.*,CATEGORY.NAME AS CATEGORY_NAME 
+  FROM FUNDRAISER 
+  JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID=CATEGORY.CATEGORY_ID 
+  WHERE FUNDRAISER.FUNDRAISER_ID=?
+  `;
+
+  connection.query(query,[fundraiserID],(error,results)=>{
+    if(error){
+      console.error('Database query failed:',error);
+      res.status(500).send('Database query failed');
+    }else if(results.length>0){
+      res.json(results[0]);
+    }else{
+      res.status(404).send('Fundraiser not found');
+    }
+  });
 });
 
 //Static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname,"public")));
 
 //Homepage
 app.get('/',(req,res)=>{
-  res.sendFile(path.join(__dirname,"index.html"));
+  res.sendFile(path.join(__dirname,"public","index.html"));
 });
 
 //search
 app.get('/search',(req,res)=>{
-  res.sendFile(path.join(__dirname,"search.html"));
+  res.sendFile(path.join(__dirname,"public","search.html"));
+});
+
+//detail
+app.get('/contact',(req,res)=>{
+  res.sendFile(path.join(__dirname,"public","contact.html"));
 });
 
 //server
-app.listen(4000,()=>{
-	console.log("Server is running in 4000");
-});
+app.listen(port,()=>{
+	console.log(`Server is running on port ${port}`);
+})
