@@ -11,6 +11,7 @@ const connection=mysql.createConnection({
 	database:"crowdfunding_db"
 });
 
+
 connection.connect(err=>{
 	if(err){
 		console.error('Error connecting to the database:'+err.stack);
@@ -36,7 +37,7 @@ app.get('/fundraisers',(req,res)=>{
     if (results.length===0){
       return res.status(404).json({message:'No active fundraisers found'});
     }
-
+    
     res.json(results);
   });
 });
@@ -46,10 +47,10 @@ app.get('/categories',(req,res)=>{
 	const city=req.query.city;
 
 	let query=`
-	SELECT FUNDRAISER.*, CATEGORY.NAME AS CATEGORY_NAME 
+	SELECT FUNDRAISER.*,CATEGORY.NAME AS CATEGORY_NAME 
     FROM FUNDRAISER 
-    JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID = CATEGORY.CATEGORY_ID 
-    WHERE FUNDRAISER.ACTIVE = true
+    JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID=CATEGORY.CATEGORY_ID 
+    WHERE FUNDRAISER.ACTIVE=true
     `;
 
     if(category){
@@ -93,25 +94,60 @@ app.get('/fundraiser/:id',(req,res)=>{
   });
 });
 
-//Static files
+app.get('/api/search',(req,res)=>{
+  const{organizer,city,category}=req.query;
+  console.log(req.query);
+
+  let query=`
+    SELECT FUNDRAISER.*, CATEGORY.NAME AS CATEGORY_NAME
+    FROM FUNDRAISER 
+    JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID=CATEGORY.CATEGORY_ID
+    WHERE FUNDRAISER.ACTIVE=true
+  `;
+
+  const conditions=[];
+  if (organizer){
+    conditions.push(`FUNDRAISER.ORGANIZER LIKE'%${organizer}%'`);
+  }
+  if (city){
+    conditions.push(`FUNDRAISER.CITY LIKE'%${city}%'`);
+  }
+  if (category){
+    conditions.push(`CATEGORY.NAME='${category}'`);
+  }
+
+  if (conditions.length>0){
+    query+=`AND${conditions.join('AND')}`;
+  }
+
+  connection.query(query,(error,results)=>{
+    if (error){
+      return res.status(500).json({error:'Database query failed'});
+    }
+
+    res.json(results);
+  });
+});
+
+// 静态文件托管
 app.use(express.static(path.join(__dirname,"public")));
 
-//Homepage
-app.get('/',(req,res)=>{
+// 主页路由
+app.get('/', (req, res)=>{
   res.sendFile(path.join(__dirname,"public","index.html"));
 });
 
-//search
-app.get('/search',(req,res)=>{
+// 搜索页面路由
+app.get('/search', (req, res)=>{
   res.sendFile(path.join(__dirname,"public","search.html"));
 });
 
-//detail
-app.get('/contact',(req,res)=>{
+// 联系页面路由
+app.get('/contact', (req, res)=>{
   res.sendFile(path.join(__dirname,"public","contact.html"));
 });
 
-//server
-app.listen(port,()=>{
-	console.log(`Server is running on port ${port}`);
-})
+// 启动服务器
+app.listen(4000,()=>{
+  console.log('Server is running on port 4000');
+});
