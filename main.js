@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   .then(response =>{
     const contentType=response.headers.get('content-type');
     
-    // 确保响应的类型是 JSON
     if (!contentType || !contentType.includes('application/json')){
       throw new TypeError("Ooohhh!!! we didn't get JSON!");
     }
@@ -80,22 +79,39 @@ document.getElementById('searchButton').addEventListener('click',()=>{
     });
 });
 
-function displayResults(fundraisers){
+function displayResults(fundraisers) {
   const resultDiv=document.getElementById('result');
-  resultDiv.innerHTML='';  // 清空之前的结果
+  resultDiv.innerHTML='';
 
   fundraisers.forEach(fundraiser=>{
     const fundraiserDiv=document.createElement('div');
     fundraiserDiv.className='fundraiser';
 
-    fundraiserDiv.innerHTML=`
-      <h3>${fundraiser.CAPTION}</h3>
-      <p><strong>Organiser:</strong> ${fundraiser.ORGANIZER}</p>
-      <p><strong>City:</strong> ${fundraiser.CITY}</p>
-      <p><strong>Category:</strong> ${fundraiser.CATEGORY_NAME}</p>
-      <p><strong>Current Funding:</strong> ${fundraiser.CURRENT_FUNDING}/Target: ${fundraiser.TARGET_FUNDING}</p>
-      <p><strong>Active:</strong> ${fundraiser.ACTIVE?'Yes':'No'}</p>
-    `;
+    const fundraiserLink=document.createElement('a');
+    fundraiserLink.href=`/contact.html?id=${fundraiser.FUNDRAISER_ID}`;
+    fundraiserLink.textContent=fundraiser.CAPTION;
+
+    const organizer=document.createElement('p');
+    organizer.textContent=`Organizer: ${fundraiser.ORGANIZER}`;
+
+    const city=document.createElement('p');
+    city.textContent=`City: ${fundraiser.CITY}`;
+
+    const category=document.createElement('p');
+    category.textContent=`Category: ${fundraiser.CATEGORY_NAME}`;
+
+    const funding=document.createElement('p');
+    funding.textContent=`Current Funding: ${fundraiser.CURRENT_FUNDING}/Target:${fundraiser.TARGET_FUNDING}`;
+
+    const active=document.createElement('p');
+    active.textContent=`Active:${fundraiser.ACTIVE?'Yes':'No'}`;
+
+    fundraiserDiv.appendChild(fundraiserLink);
+    fundraiserDiv.appendChild(organizer);
+    fundraiserDiv.appendChild(city);
+    fundraiserDiv.appendChild(category);
+    fundraiserDiv.appendChild(funding);
+    fundraiserDiv.appendChild(active);
 
     resultDiv.appendChild(fundraiserDiv);
   });
