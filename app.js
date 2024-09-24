@@ -73,8 +73,6 @@ app.get('/categories',(req,res)=>{
 app.get('/fundraiser/:id',(req,res)=>{
   const fundraiserID=req.params.id;
 
-  console.log(`Fetching fundraiser with ID:${fundraiserID}`);
-
   const query=`
   SELECT FUNDRAISER.*,CATEGORY.NAME AS CATEGORY_NAME 
   FROM FUNDRAISER 
@@ -94,9 +92,9 @@ app.get('/fundraiser/:id',(req,res)=>{
   });
 });
 
+
 app.get('/api/search',(req,res)=>{
   const{organizer,city,category}=req.query;
-  console.log(req.query);
 
   let query=`
     SELECT FUNDRAISER.*, CATEGORY.NAME AS CATEGORY_NAME
@@ -104,7 +102,7 @@ app.get('/api/search',(req,res)=>{
     JOIN CATEGORY ON FUNDRAISER.CATEGORY_ID=CATEGORY.CATEGORY_ID
     WHERE FUNDRAISER.ACTIVE=true
   `;
-
+//不同requirement
   const conditions=[];
   if (organizer){
     conditions.push(`FUNDRAISER.ORGANIZER LIKE'%${organizer}%'`);
@@ -116,8 +114,8 @@ app.get('/api/search',(req,res)=>{
     conditions.push(`CATEGORY.NAME='${category}'`);
   }
 
-  if (conditions.length>0){
-    query+=`AND${conditions.join('AND')}`;
+  if (conditions.length > 0){
+    query += `AND ${conditions.join(' AND ')}`;
   }
 
   connection.query(query,(error,results)=>{
@@ -129,25 +127,20 @@ app.get('/api/search',(req,res)=>{
   });
 });
 
-// 静态文件托管
 app.use(express.static(path.join(__dirname,"public")));
 
-// 主页路由
 app.get('/', (req, res)=>{
-  res.sendFile(path.join(__dirname,"public","index.html"));
+  res.sendFile(path.join(__dirname,"public","index.html"));//homepage
 });
 
-// 搜索页面路由
 app.get('/search', (req, res)=>{
   res.sendFile(path.join(__dirname,"public","search.html"));
 });
 
-// 联系页面路由
 app.get('/contact', (req, res)=>{
   res.sendFile(path.join(__dirname,"public","contact.html"));
 });
 
-// 启动服务器
 app.listen(4000,()=>{
   console.log('Server is running on port 4000');
 });
