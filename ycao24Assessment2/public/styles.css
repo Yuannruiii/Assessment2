@@ -1,0 +1,104 @@
+body{
+  font-family:Apple Chancery,sans-serif;
+  margin:0;
+  padding:0;
+  background-color:#f9f9f9;
+}
+
+header{
+  background-color:#52170b;
+  color:white;
+  padding:1.5em;
+  text-align:center;
+  font-size:26px;
+}
+
+nav ul{
+  list-style-type:none;
+  padding:0;
+  display:flex;
+  justify-content:center;
+}
+
+nav ul li{
+  margin:0 15px;}
+
+nav{
+  background-color:#BC8F8F;
+  padding:0.8em;
+}
+
+nav ul li a{
+  color:darkred;
+  text-decoration:none;
+  font-size:20px;
+  font-weight:bold;
+}
+
+nav ul li a:hover{
+  color:darkslategrey;
+  border-bottom:2px solid darkslategrey;
+}
+
+main{
+  padding:40px;
+  font-family:Apple Symbols,serif;
+}
+
+h2{
+  color:#52170b;
+  font-size:28px;
+  margin-bottom:20px;
+  text-align:center;
+}
+
+.fundraiser{
+  background-color:#fff;
+  padding:20px;
+  margin-bottom:20px;
+  border:2px solid #BC8F8F;
+  border-radius:8px;
+  box-shadow:0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fundraiser p{
+  font-size:18px;
+  line-height:1.6;
+  color:#333;
+}
+
+#donateButton{
+  background-color:#52170b;
+  color:white;
+  padding:12px 24px;
+  border:none;
+  border-radius:5px;
+  font-size:20px;
+  cursor:pointer;
+  transition:background-color 0.3s ease;
+  display:block;
+  margin:30px auto;
+}
+
+#donateButton:hover{
+  background-color:#BC8F8F;
+}
+
+img{
+  max-width:80%;
+  height:auto;
+  display:block;
+  margin:20px auto;
+  border-radius:10px;
+}
+
+footer{
+  background-color:#52170b;
+  color:white;
+  text-align:center;
+  padding:1em;
+  position:fixed;
+  bottom:0;
+  width:100%;
+  font-size:14px;
+}

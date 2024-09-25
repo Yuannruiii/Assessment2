@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Fundraisers</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Search Fundraisers</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/search">Search</a></li>
+        <li><a href="/contact">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <form id="searchForm">
+        <label for="organizer">Organizer:</label>
+        <input type="text" id="organizer" name="organizer">
+
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city">
+
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+          <option value="">Select a Category</option>
+          <option value="EDUCATION">Education</option>
+          <option value="MEDICAL TREATMENT">Medical Treatment</option>
+          <option value="CATERING">Catering</option>
+        </select>
+
+        <button type="button" id="searchButton">Search</button>
+        <button type="button" id="clearButton" onclick="clearCheckboxes()">Clear</button>
+      </form>
+
+      
+      <div id="result"></div>
+      <p id="errorMessage" style="color:red;font-weight:bold;display:none;">No fundraisers found.</p>
+      
+      <img src="images/Helping banner.jpg" alt="Description of the image" style="width:700px;height:auto;">
+
+      <div id="fundraiser-list"></div>
+
+
+    </section>
+  </main>
+
+  <footer>
+    <p>Contact us: ycao24@student.scu.edu.au | Address: 4215 Southport GoldCoast</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
